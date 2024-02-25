@@ -2,6 +2,10 @@ import os
 import openai
 from langchain_community.llms import OpenAI
 
+# 需要导入openai和serp的API,like:
+os.environ["OPENAI_API_KEY"] = "..."
+os.environ["SERPAPI_API_KEY"] = "..."
+
 # llm = OpenAI(temperature=0.9)
 # text = "What would be a good company name for a company that makes colorful socks?"
 # print(llm(text))
