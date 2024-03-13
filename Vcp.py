@@ -124,11 +124,11 @@ if __name__ == '__main__':
         # 年初至今涨跌幅    42.37
         if 0 == row[14]:
             continue
-        # 00    开头的股票是深交所主板的股票、
+        # 00 开头的股票是深交所主板的股票
         if row[1][0:2] == '00':
             symbol = 'sz' + row[1]
             my_filter(symbol, row[2])
-        # 60    开头是股票是上交所主板的股票，
+        # 60 开头是股票是上交所主板的股票
         elif row[1][0:2] == '60':
             symbol = 'sh' + row[1]
             my_filter(symbol, row[2])
