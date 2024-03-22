@@ -59,28 +59,28 @@ def mean_line():
 vcp = []
 
 def my_filter(symbol, name):
-    df = ak.stock_zh_a_daily(symbol=symbol, start_date="20220203", end_date="20230304",
+    df = ak.stock_zh_a_daily(symbol=symbol, start_date="20240203", end_date="20240322",
                              adjust="qfq")
     if df.empty:
         return
     yesterday = df["close"].iloc[-1]
+    value_10 = df["close"].tail(10).mean()
+    value_20 = df["close"].tail(20).mean()
     value_50 = df["close"].tail(50).mean()
-    value_150 = df["close"].tail(150).mean()
-    value_200 = df["close"].tail(200).mean()
-    if yesterday < max([value_50, value_150, value_200]):
+    if yesterday < max([value_50, value_20, value_10]):
         return
-    if value_150 < value_200 or value_50 < value_150:
+    if value_20 < value_50 or value_10 < value_20:
         return
 
-    df["SMA200"] = df["close"].rolling(200).mean()
-    if len(df["SMA200"]) < 262:
-        return
-    if df["SMA200"].iloc[-1] < df["SMA200"].iloc[-151]:
-        return
-    min_52weeks = df["close"].tail(365).min()
-    max_52weeks = df["close"].tail(365).max()
-    if yesterday/min_52weeks < 1.3 or yesterday/max_52weeks > 1 or yesterday/max_52weeks < 0.7:
-        return
+    # df["SMA200"] = df["close"].rolling(200).mean()
+    # if len(df["SMA200"]) < 262:
+    #     return
+    # if df["SMA200"].iloc[-1] < df["SMA200"].iloc[-151]:
+    #     return
+    # min_52weeks = df["close"].tail(365).min()
+    # max_52weeks = df["close"].tail(365).max()
+    # if yesterday/min_52weeks < 1.3 or yesterday/max_52weeks > 1 or yesterday/max_52weeks < 0.7:
+    #     return
     print(symbol, name)
     vcp.append(symbol+name)
     return
@@ -92,13 +92,11 @@ def get_all_stocks():
     # stock_df.to_excel("all.xlsx")
 
 if __name__ == '__main__':
-    df1 = ak.stock_zh_a_spot_em()
-    # print(df1)
-    df1 = df1.query("昨收 >= 10")
-    # df1.to_excel("price_less_10.xlsx")
+    df1 = ak.stock_zh_a_spot_em().query("昨收 <= 20")
+    # df1.to_excel("price_less_20.xlsx")
 
     # my_filter('sz002235')
-    for index,row in df1.iterrows():
+    for index, row in df1.iterrows():
         # 序号    5280
         # 代码    002708
         # 名称    光洋股份
