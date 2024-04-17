@@ -59,7 +59,7 @@ def mean_line():
 vcp = []
 
 def my_filter(symbol, name):
-    df = ak.stock_zh_a_daily(symbol=symbol, start_date="20240203", end_date="20240322",
+    df = ak.stock_zh_a_daily(symbol=symbol, start_date="20240203", end_date="20240417",
                              adjust="qfq")
     if df.empty:
         return
@@ -67,10 +67,8 @@ def my_filter(symbol, name):
     value_10 = df["close"].tail(10).mean()
     value_20 = df["close"].tail(20).mean()
     value_50 = df["close"].tail(50).mean()
-    if yesterday < max([value_50, value_20, value_10]):
-        return
-    if value_20 < value_50 or value_10 < value_20:
-        return
+    if yesterday < max([value_50, value_20, value_10]): return
+    if value_20 < value_50 or value_10 < value_20: return
 
     # df["SMA200"] = df["close"].rolling(200).mean()
     # if len(df["SMA200"]) < 262:
@@ -81,8 +79,14 @@ def my_filter(symbol, name):
     # max_52weeks = df["close"].tail(365).max()
     # if yesterday/min_52weeks < 1.3 or yesterday/max_52weeks > 1 or yesterday/max_52weeks < 0.7:
     #     return
-    print(symbol, name)
-    vcp.append(symbol+name)
+
+    # 筛选均线上扬较昨日突破
+    yesterday_value_10 = df["close"].iloc[-11:-1].mean()
+    yesterday_value_20 = df["close"].iloc[-21:-1].mean()
+    yesterday_value_50 = df["close"].iloc[-51:-1].mean()
+    if yesterday_value_20 < yesterday_value_50 or yesterday_value_10 < yesterday_value_20:
+        print(symbol, name)
+        vcp.append(symbol+name)
     return
 
 def get_all_stocks():
