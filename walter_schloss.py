@@ -3,6 +3,8 @@ import akshare as ak
 import warnings
 import time
 import os
+from datetime import datetime
+from typing import Optional
 
 # 忽略警告
 warnings.filterwarnings('ignore')
@@ -17,7 +19,7 @@ class SchlossStockScreening:
         self.result_path_csv = os.path.join(self.script_dir, '筛选结果.csv')
         self.today = datetime.now().strftime('%Y-%m-%d')
         
-    def get_stock_data(self):
+    def get_stock_data(self) -> None:
         """获取A股股票数据"""
         print("正在获取A股股票数据...")
         
@@ -70,7 +72,7 @@ class SchlossStockScreening:
         self.stocks_data.to_csv(self.data_path, index=False)
         print(f"成功获取{len(self.stocks_data)}只股票数据并保存到本地")
         
-    def _get_financial_data(self, stock_list):
+    def _get_financial_data(self, stock_list: pd.DataFrame) -> Optional[pd.DataFrame]:
         """获取财务数据，使用指定start_year的stock_financial_analysis_indicator"""
         print("尝试获取财务数据...")
         financial_data = pd.DataFrame()
@@ -113,7 +115,7 @@ class SchlossStockScreening:
             print("未能获取到财务数据，将仅使用股票基本信息进行筛选")
             return stock_list[['代码', '名称', '最新价', '涨跌幅', '总市值', '流通市值', '市盈率-动态', '市净率']]
     
-    def _map_financial_columns(self, df):
+    def _map_financial_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         """映射财务数据列名为统一格式"""
         column_mapping = {
             '资产负债率(%)': '资产负债率',
@@ -122,7 +124,7 @@ class SchlossStockScreening:
         }
         return df.rename(columns=column_mapping)
     
-    def _get_merge_key(self, financial_data, stock_list):
+    def _get_merge_key(self, financial_data: pd.DataFrame, stock_list: pd.DataFrame) -> Optional[str]:
         """智能获取合并键"""
         print(f"{financial_data}, {stock_list}")
         potential_keys = ['stock', '代码', '股票代码', 'code']
@@ -131,7 +133,7 @@ class SchlossStockScreening:
                 return key
         return None
     
-    def apply_schloss_strategy(self):
+    def apply_schloss_strategy(self) -> None:
         """应用施洛斯选股策略"""
         if self.stocks_data is None:
             print("请先获取股票数据")
@@ -189,7 +191,7 @@ class SchlossStockScreening:
         
         print(f"筛选出{len(self.screened_stocks)}只符合条件的股票")
     
-    def save_results_to_table(self):
+    def save_results_to_table(self) -> Optional[pd.DataFrame]:
         """将筛选结果保存到表格中"""
         if self.screened_stocks is None or self.screened_stocks.empty:
             print("没有筛选出符合条件的股票，无法保存结果")
@@ -220,23 +222,23 @@ class SchlossStockScreening:
         
         return result_data
         
-    def run(self):
+    def run(self) -> Optional[pd.DataFrame]:
         """运行完整的选股流程"""
         self.get_stock_data()
         self.apply_schloss_strategy()
         return self.save_results_to_table()
 
-if __name__ == "__main__":
+def main() -> None:
     print("===== 沃尔特·施洛斯A股低估值选股策略 =====")
-    from datetime import datetime
     print(f"运行时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
-    
     screener = SchlossStockScreening()
     result = screener.run()
-    
     if result is not None:
         print(f"\n共筛选出{len(result)}只股票，已保存到表格中")
-    
     print("\n===== 选股完成 =====")
     print("注意: 本程序仅提供投资参考，不构成投资建议。")
     print("投资有风险，入市需谨慎。")
+
+
+if __name__ == "__main__":
+    main()

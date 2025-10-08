@@ -1,0 +1,10 @@
+numpy>=1.23
+pandas>=1.5
+akshare>=1.13
+requests>=2.31
+matplotlib>=3.7
+mpl-finance>=0.10.1
+mplfinance>=0.12.10b0
+multitasking>=0.0.11
+langchain>=0.2.0
+langchain-community>=0.2.0

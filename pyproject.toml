@@ -1,0 +1,31 @@
+[project]
+name = "stocks-tools"
+version = "0.1.0"
+description = "A small toolbox for stock data exploration and demos"
+readme = "README.md"
+requires-python = ">=3.9"
+authors = [
+  { name = "User" }
+]
+license = { text = "MIT" }
+dependencies = []
+
+[tool.ruff]
+line-length = 100
+# 目标 Python 版本
+target-version = "py39"
+# 启用的规则集合
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort
+]
+# 按需忽略规则
+ignore = []
+
+[tool.ruff.lint.isort]
+profile = "black"
+
+[tool.black]
+line-length = 100
+skip-string-normalization = true

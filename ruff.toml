@@ -1,0 +1,14 @@
+line-length = 100
+# 目标 Python 版本
+target-version = "py39"
+
+[lint]
+select = [
+  "E",   # pycodestyle errors
+  "F",   # pyflakes
+  "I",   # isort
+]
+ignore = []
+
+[lint.isort]
+profile = "black"

@@ -1,9 +1,10 @@
 import numpy as np
 import pandas as pd
 import akshare as ak
-import mpl_finance as mpf   #告警：该库名字可以更新
+import mpl_finance as mpf   # 告警：该库已废弃，建议使用 mplfinance
 import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
+from typing import List, Optional
 
 #将股票时间转换为标准时间，不带时分秒的数据 目前有错
 # def date_to_num(dates):
@@ -14,7 +15,7 @@ import matplotlib.ticker as ticker
 #         num_time.append(num_date)
 #     return num_time
 
-def mean_line():
+def mean_line() -> None:
     df = ak.stock_zh_a_daily(symbol='sz002241', start_date="20220203", end_date="20230204",
                              adjust="qfq")
     print(df['close'].iloc[-1])
@@ -58,7 +59,7 @@ def mean_line():
 
 vcp = []
 
-def my_filter(symbol, name):
+def my_filter(symbol: str, name: str) -> None:
     df = ak.stock_zh_a_daily(symbol=symbol, start_date="20240203", end_date="20240417",
                              adjust="qfq")
     if df.empty:
@@ -89,13 +90,13 @@ def my_filter(symbol, name):
         vcp.append(symbol+name)
     return
 
-def get_all_stocks():
+def get_all_stocks() -> None:
     # 打印所有指数股票，速度较慢
     stock_df = ak.stock_zh_index_spot()
     print(stock_df)
     # stock_df.to_excel("all.xlsx")
 
-if __name__ == '__main__':
+def main() -> None:
     df1 = ak.stock_zh_a_spot_em().query("昨收 <= 20")
     # df1.to_excel("price_less_20.xlsx")
 
@@ -142,3 +143,7 @@ if __name__ == '__main__':
 
     print(vcp)
     # df.to_excel("stock_zh_a_daily.xlsx")
+
+
+if __name__ == '__main__':
+    main()
