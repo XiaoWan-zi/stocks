@@ -49,7 +49,7 @@ ruff check "." --fix
 - 本项目提供 `pyproject.toml` 与 `ruff.toml`，已配置基础规则（行宽 100、isort 排序等）。
 
 ## 常见问题
-- 未安装依赖：请先执行 `pip install -r requirements.txt`。
+- 未安装依赖：请先执行 `pip install -r requirements.txt`
 - `mpl_finance` 已较旧，推荐迁移到 `mplfinance`；若使用旧接口会看到提示或导入警告。
 - `akshare` 接口依赖网络环境，若数据为空或报错，可稍后重试。
 
