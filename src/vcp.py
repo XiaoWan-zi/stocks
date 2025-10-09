@@ -6,7 +6,7 @@ import matplotlib.pyplot as plt
 import matplotlib.ticker as ticker
 from typing import List, Optional
 
-#将股票时间转换为标准时间，不带时分秒的数据 目前有错
+#将股票时间转换为标准时间，不带时分秒的数据 目前有错.
 # def date_to_num(dates):
 #     num_time = []
 #     for date in dates:
