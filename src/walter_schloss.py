@@ -125,7 +125,9 @@ class SchlossStockScreening:
         }
         return df.rename(columns=column_mapping)
 
-    def _get_merge_key(self, financial_data: pd.DataFrame, stock_list: pd.DataFrame) -> Optional[str]:
+    def _get_merge_key(
+        self, financial_data: pd.DataFrame, stock_list: pd.DataFrame
+    ) -> Optional[str]:
         """智能获取合并键"""
         print(f"{financial_data}, {stock_list}")
         potential_keys = ['stock', '代码', '股票代码', 'code']
@@ -142,7 +144,9 @@ class SchlossStockScreening:
 
         print("正在应用施洛斯选股策略...")
         required_columns = ['市盈率-动态', '市净率', '资产负债率', '净利润同比增长率']
-        available_columns = {col: col for col in required_columns if col in self.stocks_data.columns}
+        available_columns = {
+            col: col for col in required_columns if col in self.stocks_data.columns
+        }
         missing_columns = [col for col in required_columns if col not in available_columns]
 
         if missing_columns:
@@ -153,7 +157,9 @@ class SchlossStockScreening:
         pb_filter = pd.Series([True] * len(self.stocks_data), index=self.stocks_data.index)
         debt_filter = pd.Series([True] * len(self.stocks_data), index=self.stocks_data.index)
         profit_filter = pd.Series([True] * len(self.stocks_data), index=self.stocks_data.index)
-        market_value_filter = pd.Series([True] * len(self.stocks_data), index=self.stocks_data.index)
+        market_value_filter = pd.Series(
+            [True] * len(self.stocks_data), index=self.stocks_data.index
+        )
 
         # 1. 低市盈率（P/E）
         if '市盈率-动态' in available_columns:
