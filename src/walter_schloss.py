@@ -2,6 +2,7 @@
 
 实现沃尔特·施洛斯的价值投资选股策略，通过市盈率、市净率、资产负债率和净利润增长率等指标筛选A股股票。
 """
+# pylint: disable=duplicate-code
 
 import warnings
 import time
@@ -31,7 +32,7 @@ class SchlossStockScreening:
         self.result_path_csv = os.path.join(self.script_dir, '筛选结果.csv')
         self.today = datetime.now().strftime('%Y-%m-%d')
 
-    def get_stock_data(self) -> None:  # pylint: disable=duplicate-code
+    def get_stock_data(self) -> None:
         """获取A股股票数据"""
         print("正在获取A股股票数据...")
 
