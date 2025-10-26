@@ -13,7 +13,8 @@ import warnings
 from datetime import datetime
 from typing import Optional
 
-import pandas as pd
+import pandas as pd  # pylint: disable=import-error
+import akshare as ak  # pylint: disable=import-error
 
 warnings.filterwarnings('ignore')
 
@@ -44,14 +45,6 @@ class MagicFormulaScreener:
                 self.stocks_data = pd.read_csv(self.data_path)
                 print(f"成功读取{len(self.stocks_data)}只股票数据")
                 return
-
-        # 获取股票列表（延迟导入，避免环境未安装导致导入错误）
-        try:
-            import akshare as ak  # pylint: disable=import-error
-        except ImportError as err:
-            raise ImportError(
-                "运行本模块需要安装 akshare，请先执行: pip install akshare"
-            ) from err
 
         stock_list = ak.stock_zh_a_spot_em()
 
@@ -90,12 +83,6 @@ class MagicFormulaScreener:
 
         # 限制处理数量，避免请求过多
         stock_codes = stock_codes[:100]  # 只处理前100只股票作为示例
-
-        try:
-            import akshare as ak  # pylint: disable=import-error
-        except ImportError as err:
-            print("缺少 akshare，无法获取财务数据。", err)
-            return None
 
         for i, code in enumerate(stock_codes):
             try:

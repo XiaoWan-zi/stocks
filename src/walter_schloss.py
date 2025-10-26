@@ -1,15 +1,28 @@
-import pandas as pd
-import akshare as ak
+"""沃尔特·施洛斯低估值选股策略模块
+
+实现沃尔特·施洛斯的价值投资选股策略，通过市盈率、市净率、资产负债率和净利润增长率等指标筛选A股股票。
+"""
+# pylint: disable=duplicate-code
+
 import warnings
 import time
 import os
 from datetime import datetime
 from typing import Optional
 
+import pandas as pd  # pylint: disable=import-error
+import akshare as ak  # pylint: disable=import-error
+
 # 忽略警告
 warnings.filterwarnings('ignore')
 
+
 class SchlossStockScreening:
+    """沃尔特·施洛斯低估值选股策略类
+    
+    实现基于价值投资理念的选股策略，包括低市盈率、低市净率、
+    适度债务水平和正向增长等筛选条件。
+    """
     def __init__(self):
         """初始化选股策略类"""
         self.stocks_data = None
@@ -97,7 +110,7 @@ class SchlossStockScreening:
                             stock_financial['代码'] = code
                             batch_data = pd.concat([batch_data, stock_financial])
                     time.sleep(0.3)  # 增加延时避免频繁请求
-                except Exception as e:
+                except (ValueError, KeyError, IndexError, AttributeError) as e:
                     print(f"获取股票 {code} 财务数据时出错: {e}")
                     continue
 
@@ -112,9 +125,8 @@ class SchlossStockScreening:
             financial_data = self._map_financial_columns(financial_data)
             print(f"成功获取{len(financial_data)}只股票的财务分析数据")
             return financial_data
-        else:
-            print("未能获取到财务数据，将仅使用股票基本信息进行筛选")
-            return stock_list[['代码', '名称', '最新价', '涨跌幅', '总市值', '流通市值', '市盈率-动态', '市净率']]
+        print("未能获取到财务数据，将仅使用股票基本信息进行筛选")
+        return stock_list[['代码', '名称', '最新价', '涨跌幅', '总市值', '流通市值', '市盈率-动态', '市净率']]
 
     def _map_financial_columns(self, df: pd.DataFrame) -> pd.DataFrame:
         """映射财务数据列名为统一格式"""
@@ -202,7 +214,7 @@ class SchlossStockScreening:
         """将筛选结果保存到表格中"""
         if self.screened_stocks is None or self.screened_stocks.empty:
             print("没有筛选出符合条件的股票，无法保存结果")
-            return
+            return None
 
         # 确定要保存的列
         columns_to_save = ['代码', '名称']
@@ -217,14 +229,14 @@ class SchlossStockScreening:
         available_columns = [col for col in columns_to_save if col in self.screened_stocks.columns]
         if not available_columns:
             print("警告: 没有可用的列来保存筛选结果")
-            return
+            return None
 
         # 保存为CSV
         result_data = self.screened_stocks[available_columns].copy()
         try:
             result_data.to_csv(self.result_path_csv, index=False, encoding='utf-8-sig')
             print(f"已将筛选结果保存到 {self.result_path_csv}")
-        except Exception as e:
+        except (IOError, ValueError) as e:
             print(f"保存CSV文件时出错: {e}")
 
         return result_data
@@ -236,6 +248,7 @@ class SchlossStockScreening:
         return self.save_results_to_table()
 
 def main() -> None:
+    """主函数"""
     print("===== 沃尔特·施洛斯A股低估值选股策略 =====")
     print(f"运行时间: {datetime.now().strftime('%Y-%m-%d %H:%M:%S')}")
     screener = SchlossStockScreening()

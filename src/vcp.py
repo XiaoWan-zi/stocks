@@ -1,10 +1,12 @@
-import numpy as np
-import pandas as pd
-import akshare as ak
-import mpl_finance as mpf   # 告警：该库已废弃，建议使用 mplfinance
-import matplotlib.pyplot as plt
-import matplotlib.ticker as ticker
-from typing import List, Optional
+"""VCP（波动收缩模式）选股模块
+
+实现基于VCP模式的股票筛选策略，用于识别第二阶段的突破机会。
+"""
+
+import akshare as ak  # pylint: disable=import-error
+import mpl_finance as mpf  # pylint: disable=import-error
+import matplotlib.pyplot as plt  # pylint: disable=import-error
+import pandas as pd  # pylint: disable=import-error
 
 #将股票时间转换为标准时间，不带时分秒的数据 目前有错.
 # def date_to_num(dates):
@@ -16,6 +18,7 @@ from typing import List, Optional
 #     return num_time
 
 def mean_line() -> None:
+    """绘制股票均线图表"""
     df = ak.stock_zh_a_daily(symbol='sz002241', start_date="20220203", end_date="20230204",
                              adjust="qfq")
     print(df['close'].iloc[-1])
@@ -25,19 +28,10 @@ def mean_line() -> None:
     ax = fig.add_subplot(111)
     # 获取刚才的股票数据
     df = pd.read_excel("歌尔股份k.xlsx")
-    mpf.candlestick2_ochl(ax, df["open"], df["close"], df["high"], df["low"], width=0.6, colorup='r', colordown='green',
-                          alpha=1.0)
+    mpf.candlestick2_ochl(ax, df["open"], df["close"], df["high"], df["low"],
+                          width=0.6, colorup='r', colordown='green', alpha=1.0)
     df['date'] = pd.to_datetime(df['date'])
     df['date'] = df['date'].apply(lambda x: x.strftime('%Y-%m-%d'))
-
-    def format_date(x, pos=None):
-        if x < 0 or x > len(df['date']) - 1:
-            return ''
-        return df['date'][int(x)]
-
-    # ax.xaxis.set_major_formatter(ticker.FuncFormatter(format_date))
-    # plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
-    #
     df["SMA50"] = df["close"].rolling(50).mean()
     print(df["SMA50"].iloc[-1])
     # df["SMA150"] = df["close"].rolling(150).mean()
@@ -59,7 +53,9 @@ def mean_line() -> None:
 
 vcp = []
 
+
 def my_filter(symbol: str, name: str) -> None:
+    """筛选符合VCP第二阶段条件的股票"""
     df = ak.stock_zh_a_daily(symbol=symbol, start_date="20240203", end_date="20240417",
                              adjust="qfq")
     if df.empty:
@@ -68,8 +64,10 @@ def my_filter(symbol: str, name: str) -> None:
     value_10 = df["close"].tail(10).mean()
     value_20 = df["close"].tail(20).mean()
     value_50 = df["close"].tail(50).mean()
-    if yesterday < max([value_50, value_20, value_10]): return
-    if value_20 < value_50 or value_10 < value_20: return
+    if yesterday < max([value_50, value_20, value_10]):
+        return
+    if value_20 < value_50 or value_10 < value_20:
+        return
 
     # df["SMA200"] = df["close"].rolling(200).mean()
     # if len(df["SMA200"]) < 262:
@@ -90,18 +88,22 @@ def my_filter(symbol: str, name: str) -> None:
         vcp.append(symbol+name)
     return
 
+
 def get_all_stocks() -> None:
+    """获取所有指数股票列表"""
     # 打印所有指数股票，速度较慢
     stock_df = ak.stock_zh_index_spot()
     print(stock_df)
     # stock_df.to_excel("all.xlsx")
 
+
 def main() -> None:
+    """主函数，执行VCP选股策略"""
     df1 = ak.stock_zh_a_spot_em().query("昨收 <= 20")
     # df1.to_excel("price_less_20.xlsx")
 
     # my_filter('sz002235')
-    for index, row in df1.iterrows():
+    for _, row in df1.iterrows():
         # 序号    5280
         # 代码    002708
         # 名称    光洋股份
