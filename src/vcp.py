@@ -6,7 +6,7 @@
 import akshare as ak  # pylint: disable=import-error
 import mpl_finance as mpf  # pylint: disable=import-error
 import matplotlib.pyplot as plt  # pylint: disable=import-error
-import pandas as pd
+import pandas as pd  # pylint: disable=import-error
 
 #将股票时间转换为标准时间，不带时分秒的数据 目前有错.
 # def date_to_num(dates):

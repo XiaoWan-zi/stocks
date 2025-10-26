@@ -9,7 +9,7 @@ import os
 from datetime import datetime
 from typing import Optional
 
-import pandas as pd
+import pandas as pd  # pylint: disable=import-error
 import akshare as ak  # pylint: disable=import-error
 
 # 忽略警告
