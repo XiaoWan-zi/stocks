@@ -31,7 +31,7 @@ class SchlossStockScreening:
         self.result_path_csv = os.path.join(self.script_dir, '筛选结果.csv')
         self.today = datetime.now().strftime('%Y-%m-%d')
 
-    def get_stock_data(self) -> None:
+    def get_stock_data(self) -> None:  # pylint: disable=duplicate-code
         """获取A股股票数据"""
         print("正在获取A股股票数据...")
 

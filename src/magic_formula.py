@@ -30,7 +30,7 @@ class MagicFormulaScreener:
         self.data_path = os.path.join(self.script_dir, '..', 'magic_formula_data.csv')
         self.result_path = os.path.join(self.script_dir, '..', 'magic_formula_results.csv')
 
-    def get_stock_data(self) -> None:
+    def get_stock_data(self) -> None:  # pylint: disable=duplicate-code
         """获取A股股票数据。"""
         print("正在获取A股股票数据...")
 
